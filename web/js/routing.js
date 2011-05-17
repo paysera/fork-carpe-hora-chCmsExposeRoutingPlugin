@@ -121,7 +121,7 @@ $.ExposeRouting = $.ExposeRouting || {};
       /**
        * the cross site request forgery defaults
        *
-       * @param {Object}
+       * @type {Object}
        * @api public
        */
       csrf: {},
