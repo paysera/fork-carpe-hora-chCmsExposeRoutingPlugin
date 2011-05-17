@@ -111,8 +111,8 @@
       </method>
     </class>
   </file>
-  <file path="modules/chCmsExposeRouting/templates/indexSuccess.js.php" hash="2b80c3a0c04915925fa2dec1eae1ae84"/>
-  <file path="modules/chCmsExposeRouting/lib/BasechCmsExposeRoutingActions.class.php" hash="179218015cd9e02d341b828bfbefeed1">
+  <file path="modules/chCmsExposeRouting/templates/indexSuccess.js.php" hash="7b8bce50955064824a0ea89bb69d997a"/>
+  <file path="modules/chCmsExposeRouting/lib/BasechCmsExposeRoutingActions.class.php" hash="4aa83a70516adb38a45be8a9004cb803">
     <docblock>
       <description>Base actions for the chCmsExposeRoutingPlugin chCmsExposeRouting module.</description>
       <long-description>
