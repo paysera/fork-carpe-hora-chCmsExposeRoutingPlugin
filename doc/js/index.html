@@ -239,20 +239,19 @@ having to be escaped.</p>
           <span class="keyword">return</span> $[<span class="variable">method</span>](<span class="variable">self</span>.<span class="variable">generate</span>(<span class="variable">route_id</span>, <span class="variable">data</span>, <span class="variable">false</span>), <span class="variable">data</span>, <span class="variable">callback</span>, <span class="variable">type</span>);
         }
       });
-    $([&<span class="variable">quot</span>;<span class="variable">put</span>&<span class="variable">quot</span>;, &<span class="variable">quot</span>;<span class="variable">del</span>&<span class="variable">quot</span>;]).<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">i</span>, <span class="variable">method</span>) {
-        <span class="class">ServerMethods</span>[<span class="variable">method</span>] = <span class="keyword">function</span>(<span class="variable">route_id</span>, <span class="variable">data</span>, <span class="variable">callback</span>, <span class="variable">type</span>) {
-          <span class="keyword">var</span> <span class="variable">_data</span> = <span class="variable">data</span>;
+    $([&<span class="variable">quot</span>;<span class="variable">put</span>&<span class="variable">quot</span>;, &<span class="variable">quot</span>;<span class="keyword">delete</span>&<span class="variable">quot</span>;]).<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">i</span>, <span class="variable">method</span>) {
+        <span class="class">ServerMethods</span>[<span class="variable">method</span>.<span class="variable">substr</span>(<span class="number integer">0</span>,<span class="number integer">3</span>)] = <span class="keyword">function</span>(<span class="variable">route_id</span>, <span class="variable">data</span>, <span class="variable">callback</span>, <span class="variable">type</span>) {
+          <span class="keyword">var</span> <span class="variable">_data</span> = {};
+          <span class="variable">_data</span>[<span class="variable">self</span>.<span class="variable">methodParameterName</span>] = <span class="variable">method</span>;
           <span class="comment">// shift arguments if data is ommited</span>
           <span class="keyword">if</span> ($.<span class="variable">isFunction</span>(<span class="variable">_data</span>)) {
             <span class="variable">type</span> = <span class="variable">type</span> || <span class="variable">callback</span>;
             <span class="variable">callback</span> = <span class="variable">_data</span>;
-            <span class="variable">_data</span> = {};
+            <span class="variable">data</span> = <span class="variable">undefined</span>;
           }
           <span class="comment">// extend with method</span>
-          <span class="variable">_data</span> = <span class="variable">_data</span> || {};
-          <span class="variable">_data</span>[<span class="variable">self</span>.<span class="variable">methodParameterName</span>] = <span class="variable">method</span>;
 
-          <span class="keyword">return</span> $.<span class="variable">post</span>(<span class="variable">self</span>.<span class="variable">generate</span>(<span class="variable">route_id</span>, <span class="variable">_data</span>, <span class="variable">false</span>), $.<span class="variable">extend</span>(<span class="variable">_data</span>), <span class="variable">callback</span>, <span class="variable">type</span>);
+          <span class="keyword">return</span> $.<span class="variable">post</span>(<span class="variable">self</span>.<span class="variable">generate</span>(<span class="variable">route_id</span>, <span class="variable">_data</span>, <span class="variable">false</span>), $.<span class="variable">extend</span>(<span class="variable">_data</span>, <span class="variable">data</span> || {}), <span class="variable">callback</span>, <span class="variable">type</span>);
         }
       });
 
