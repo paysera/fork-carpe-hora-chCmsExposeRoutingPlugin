@@ -108,20 +108,19 @@ $.ExposeRouting = $.ExposeRouting || {};
           return $[method](self.generate(route_id, data, false), data, callback, type);
         }
       });
-    $(["put", "del"]).each(function(i, method) {
-        ServerMethods[method] = function(route_id, data, callback, type) {
-          var _data = data;
+    $(["put", "delete"]).each(function(i, method) {
+        ServerMethods[method.substr(0,3)] = function(route_id, data, callback, type) {
+          var _data = {};
+          _data[self.methodParameterName] = method;
           // shift arguments if data is ommited
           if ($.isFunction(_data)) {
             type = type || callback;
             callback = _data;
-            _data = {};
+            data = undefined;
           }
           // extend with method
-          _data = _data || {};
-          _data[self.methodParameterName] = method;
 
-          return $.post(self.generate(route_id, _data, false), $.extend(_data), callback, type);
+          return $.post(self.generate(route_id, _data, false), $.extend(_data, data || {}), callback, type);
         }
       });
 
