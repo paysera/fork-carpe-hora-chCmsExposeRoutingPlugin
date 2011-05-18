@@ -2,14 +2,19 @@
 var Routing = $.ExposeRouting;
 
 test('api definition', function() {
-  expect(6);
+  expect(10);
 
   ok(Routing, 'Routing is defined');
   ok($.isFunction(Routing.connect), 'Routing.connect is a function');
   ok($.isFunction(Routing.generate), 'Routing.generate is a function');
-  ok($.isFunction(Routing.get), 'Routing.get is a function');
+  ok($.isFunction(Routing.getRoute), 'Routing.get is a function');
   ok($.isFunction(Routing.has), 'Routing.has is a function');
   ok($.isFunction(Routing.flush), 'Routing.flush is a function');
+  // calls
+  ok($.isFunction(Routing.get), 'Routing.get is a function');
+  ok($.isFunction(Routing.put), 'Routing.put is a function');
+  ok($.isFunction(Routing.post), 'Routing.post is a function');
+  ok($.isFunction(Routing.del), 'Routing.del is a function');
 });
 
 test('route registration', function() {
@@ -20,18 +25,18 @@ test('route registration', function() {
               'connect "route_1". Routing.connect returns Routing');
   ok(Routing.has('route_1'), 'route_1 is connected');
   ok(!Routing.has('route_2'), 'route_2 is not yet connected');
-  equal(Routing.get('route_1'), '/route1', 'route_1 url is correct');
+  equal(Routing.getRoute('route_1'), '/route1', 'route_1 url is correct');
 
   strictEqual(Routing.connect('route_2', '/route2'), Routing,
               'connect "route_2". Routing.connect returns Routing');
   ok(Routing.has('route_1'), 'route_1 is still connected');
   ok(Routing.has('route_2'), 'route_2 is connected');
-  equal(Routing.get('route_1'), '/route1', 'route_1 url is still correct');
-  equal(Routing.get('route_2'), '/route2', 'route_2 url is correct');
+  equal(Routing.getRoute('route_1'), '/route1', 'route_1 url is still correct');
+  equal(Routing.getRoute('route_2'), '/route2', 'route_2 url is correct');
 });
 
 test('route generation', function() {
-  expect(15);
+  expect(18);
 
   Routing.flush();
   equal(Routing.connect('route_1', '/route1').generate('route_1'), '/route1',
@@ -61,7 +66,16 @@ test('route generation', function() {
 
   equal(Routing.generate('route_5', { id: 'foo', foo: 'bar' }),
                               '/route/foo?foo=bar',
-                        'passing extra parameters happens it as query string');
+                        'withExtraParameter is true by default');
+
+  var _testVar = { id: 'foo', foo: 'bar' };
+
+  equal(Routing.generate('route_5', _testVar, false),
+                              '/route/foo',
+                        'withExtraParameter to false prevent extra params');
+
+  ok(undefined === _testVar['id'], 'used params are unset');
+  equal(_testVar['foo'], 'bar', 'unused params are still present');
 
   equal(Routing.connect('route_6', '/route/:identical/id/:id/id/:identical/foo')
                               .generate('route_6', { id: 'bar' }),
@@ -86,7 +100,7 @@ test('route generation', function() {
   // check for defaults
   Routing.defaults = {sf_format: 'html', 'foo': 'bar'};
   Routing.prefix = '';
-  equal(Routing.generate('route_3'), '/route3.html', 
+  equal(Routing.generate('route_3'), '/route3.html',
                                 'defaults are taken in account');
 
   // check for route defaults
@@ -98,7 +112,7 @@ test('route generation', function() {
   equal(Routing.generate('route_8', { id: 'bar' }),
                               '/route/bar.json',
                               'route parameters overrides route defaults');
-  //
+
   //test with suffix
   Routing.variablePrefix = '{';
   Routing.variableSuffix = '}';

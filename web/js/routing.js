@@ -20,7 +20,9 @@ $.ExposeRouting = $.ExposeRouting || {};
         rquery = /\?/,
         rabsurl = /^\//,
         rescregexp = /[-[\]{}()*+?.,\\^$|#\s]/g,
-        rdblslash = /\/\//g;
+        rdblslash = /\/\//g,
+        self = Routing,
+        ServerMethods = {};
 
     /**
      * @api private
@@ -50,7 +52,7 @@ $.ExposeRouting = $.ExposeRouting || {};
 
       // return in a or
       if (_separators.length > 1) {return _separators.join('|')}
-      else if(_separators.length) {return _separators[0];}
+      else if (_separators.length) {return _separators[0];}
       return '';
     };
 
@@ -66,9 +68,9 @@ $.ExposeRouting = $.ExposeRouting || {};
     function replace_params(url, params) {
         var _i,
             _url = url,
-            _separators = Routing.segmentSeparators,
-            _prefixes = regexify(Routing.variablePrefix),
-            _suffixes = regexify(Routing.variableSuffix),
+            _separators = self.segmentSeparators,
+            _prefixes = regexify(self.variablePrefix),
+            _suffixes = regexify(self.variableSuffix),
             _prefix = '(' + regexify(_separators, '^') + ')' + _prefixes,
             _suffix = _suffixes + '(' + regexify(_separators, '$') + ')';
         for (_i in params) {
@@ -81,9 +83,49 @@ $.ExposeRouting = $.ExposeRouting || {};
         }
 
         return _url;
-    }
+    };
 
-    return {
+    /**
+     * get, put,  post, del:
+     * ====================
+     * send server request at route url from route id and params.
+     *
+     * @param {String}    route_id    the id of route to generate url for.
+     * @param {Object}    [params]    the parameters to append to the route.
+     * @param {Function}  [callback=success(data, textStatus, jqXHR)]  function for success.
+     * @param {String}    [type]      the return data type.
+     * @api public
+     */
+    $(["get", "post"]).each(function(i, method) {
+        ServerMethods[method] = function(route_id, data, callback, type) {
+          // shift arguments if data is ommited
+          if ($.isFunction(data)) {
+            type = type || callback;
+            callback = data;
+            data = undefined;
+          }
+
+          return $[method](self.generate(route_id, data, false), data, callback, type);
+        }
+      });
+    $(["put", "del"]).each(function(i, method) {
+        ServerMethods[method] = function(route_id, data, callback, type) {
+          var _data = data;
+          // shift arguments if data is ommited
+          if ($.isFunction(_data)) {
+            type = type || callback;
+            callback = _data;
+            _data = {};
+          }
+          // extend with method
+          _data = _data || {};
+          _data[self.methodParameterName] = method;
+
+          return $.post(self.generate(route_id, _data, false), $.extend(_data), callback, type);
+        }
+      });
+
+    return $.extend(ServerMethods, {
       /**
        * default routing parameters for every routes.
        *
@@ -126,40 +168,11 @@ $.ExposeRouting = $.ExposeRouting || {};
        */
       csrf: {},
       /**
-       * generate a route url from route id and params.
+       * name for the parameter used to specify non HTTP 1.0 method name
        *
-       * @param {String}  route_id  the id of route to generate url for.
-       * @param {Objects} params    the parameters to append to the route.
-       * @return {String} generated url.
-       * @api public
+       * @type {String}
        */
-      generate: function(route_id, params) {
-        var _route = Routing.get(route_id),
-            _params = $.extend({}, _defaults[route_id] || {}, params || {}),
-            _queryString,
-            _url = _route;
-
-        if (!_url) {
-          throw 'No matching route for ' + route_id;
-        }
-
-        // replace with params then defaults
-        _url = replace_params(_url, _params);
-        _url = replace_params(_url, $.extend({}, Routing.defaults || {}));
-
-        // remaining params as query string
-        _queryString = $.param(_params);
-
-        if (_queryString.length) {
-          _url += (rquery.test(_url) ? '&' : '?') + _queryString;
-        }
-
-        _url = (rabsurl.test(_url) ? '' : '/') + _url;
-        _url = Routing.prefix + _url;
-        _url = (rabsurl.test(_url) ? '' : '/') + _url;
-
-        return _url.replace(rdblslash, '/');
-      },
+      methodParameterName: 'sf_method',
       /**
        * connect a route.
        *
@@ -171,7 +184,7 @@ $.ExposeRouting = $.ExposeRouting || {};
       connect: function(id, pattern, defaults) {
         _routes[id] = pattern;
         _defaults[id] = defaults || {};
-        return Routing;
+        return self;
       },
       /**
        * retrieve a route by it's id.
@@ -180,7 +193,7 @@ $.ExposeRouting = $.ExposeRouting || {};
        * @return {String} requested route.
        * @api public
        */
-      get: function(route_id) {
+      getRoute: function(route_id) {
         return _routes[route_id] || undefined;
       },
       /**
@@ -202,8 +215,49 @@ $.ExposeRouting = $.ExposeRouting || {};
       flush: function() {
         _routes = {};
         _defaults = {};
-        return Routing;
+        return self;
+      },
+      /**
+       * generate a route url from route id and params.
+       * **Warnig**: given params are modified !
+       * used parameters are 
+       *
+       * @param {String}  route_id  the id of route to generate url for.
+       * @param {Object} params    the parameters to append to the route.
+       * @param {Boolean} withExtraParameters include extra parameters to url ? (default = true).
+       * @return {String} generated url.
+       * @api public
+       */
+      generate: function(route_id, params, withExtraParameters) {
+        var _route = self.getRoute(route_id),
+            _queryString,
+            _url = _route;
+
+        if (!_url) {
+          throw 'No matching route for ' + route_id;
+        }
+
+        // replace with params then defaults
+        _url = replace_params(_url, params);
+        _url = replace_params(_url, $.extend({}, 
+                                      self.defaults || {}, 
+                                      _defaults[route_id] || {}));
+
+        // remaining params as query string
+        if (withExtraParameters || undefined === withExtraParameters) {
+          _queryString = $.param(params || {});
+
+          if (_queryString.length) {
+            _url += (rquery.test(_url) ? '&' : '?') + _queryString;
+          }
+        }
+
+        _url = (rabsurl.test(_url) ? '' : '/') + _url;
+        _url = self.prefix + _url;
+        _url = (rabsurl.test(_url) ? '' : '/') + _url;
+
+        return _url.replace(rdblslash, '/');
       }
-    }; // end of return
+    }); // end of return/extend
   })());
 })($.ExposeRouting, jQuery);
