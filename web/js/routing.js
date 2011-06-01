@@ -120,7 +120,8 @@ $.ExposeRouting = $.ExposeRouting || {};
           }
           // extend with method
 
-          return $.post(self.generate(route_id, _data, false), $.extend(_data, data || {}), callback, type);
+          _data = $.extend(_data, data || {});
+          return $.post(self.generate(route_id, _data, false), _data, callback, type);
         }
       });
 
