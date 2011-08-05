@@ -5,26 +5,22 @@ github_url: http://github.com/Carpe-Hora/chCmsExposeRoutingPlugin
 date: 2011-08-05
 ---
 
-chCmsExposeRoutingPlugin: expose your symfony routes to javascript
-==================================================================
+# chCmsExposeRoutingPlugin: expose your symfony routes to javascript
 
-Goal
-----
+## Goal
 
-[chCmsExposeRoutingPlugin](http://themouette.github.com/chCmsExposeRoutingPlugin/) is a 
+[chCmsExposeRoutingPlugin](http://themouette.github.com/chCmsExposeRoutingPlugin/) is a
 [symfony 1.(3|4)](http://www.symfony-project.org/) plugin used to expose routing definition
 to the client side.
 
-if you use [symfony2](http://symfony.com/), have a look to [Bazinga/ExposeRoutingBundle](https://github.com/Bazinga/ExposeRoutingBundle) 
+if you use [symfony2](http://symfony.com/), have a look to [Bazinga/ExposeRoutingBundle](https://github.com/Bazinga/ExposeRoutingBundle)
 
 
-Requirement
------------
+# Requirement
 
 You need jquery to use this plugin. jQuery is not bundeled with this plugin, you have to include it yourself.
 
-How does it work ?
-------------------
+# How does it work ?
 
 ### Enable
 
@@ -154,19 +150,17 @@ Routing.generate('route_id', {"id": 10, "foo":"bar"});
 $.get(Routing.generate('route_id', {"id": 10, "foo":"bar"}));
 // will call /foo/10/bar?foo=bar
 ```
-Documentation
-----
+## Documentation
 
 * <a href="./doc/js/index.html">Javascript doc</a>
 * <a href="./doc/php/index.html">plugin doc</a>
 
-Test suite
-----
+## Test suite
+
 You can help us improving code quality by running the <a href="test/js/index.html">javascript test suite</a>.
 if you find something wrong, please <a href="https://github.com/carpe-hora/chCmsExposeRoutingPlugin/issues">report an issue</a>
 
-TODO
-----
+## TODO
 
 * cache js routing
 * add simple way to call server with sf_method and csrf_token
