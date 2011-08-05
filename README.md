@@ -147,6 +147,16 @@ Routing.generate('route_id', {"id": 10, "foo":"bar"});
 $.get(Routing.generate('route_id', {"id": 10, "foo":"bar"}));
 // will call /foo/10/bar?foo=bar
 ```
+Documentation
+----
+
+* <a href="./doc/js/index.html">Javascript doc</a>
+* <a href="./doc/php/index.html">plugin doc</a>
+
+Test suite
+----
+You can help us improving code quality by running the <a href="test/js/index.html">javascript test suite</a>.
+if you find something wrong, please <a href="https://github.com/carpe-hora/chCmsExposeRoutingPlugin/issues">report an issue</a>
 
 TODO
 ----
