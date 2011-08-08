@@ -24,7 +24,7 @@ How does it work ?
 First, enable the plugin in your project configuration:
 
 ```php
-<php
+<?php
 // config/ProjectConfiguration.class.php
 
 public function setup()
