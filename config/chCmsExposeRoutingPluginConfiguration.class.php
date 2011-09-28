@@ -2,7 +2,7 @@
 
 /**
  * chCmsExposeRoutingPlugin configuration.
- * 
+ *
  * @package     chCmsExposeRoutingPlugin
  * @subpackage  config
  * @author      Your name here
@@ -53,7 +53,7 @@ class chCmsExposeRoutingPluginConfiguration extends sfPluginConfiguration
       $response = $event->getSubject()->getResponse();
       $routing  = $event->getSubject()->getRouting();
       $response->addJavascript('/chCmsExposeRoutingPlugin/js/routing', sfWebResponse::MIDDLE);
-      $response->addJavascript($routing->generate('ch_cms_expose_routing'), sfWebResponse::LAST);
+      $response->addJavascript($routing->generate('ch_cms_expose_routing'), sfWebResponse::LAST, array('no_archive' => true));
     }
   }
 }
