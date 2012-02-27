@@ -8,7 +8,7 @@
  * define Routing class
  */
 
-$.ExposeRouting = $.ExposeRouting || {};
+jQuery.ExposeRouting = jQuery.ExposeRouting || {};
 
 (function(Routing, $, undefined) {
 
@@ -260,4 +260,4 @@ $.ExposeRouting = $.ExposeRouting || {};
       }
     }); // end of return/extend
   })());
-})($.ExposeRouting, jQuery);
+})(jQuery.ExposeRouting, jQuery);
