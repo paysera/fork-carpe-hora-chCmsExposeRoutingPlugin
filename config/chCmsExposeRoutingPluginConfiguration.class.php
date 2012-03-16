@@ -52,7 +52,7 @@ class chCmsExposeRoutingPluginConfiguration extends sfPluginConfiguration
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array('register chCmsExposeRoutingPlugin scripts', 'priority' => sfLogger::INFO)));
       $response = $event->getSubject()->getResponse();
       $routing  = $event->getSubject()->getRouting();
-      $response->addJavascript('/chCmsExposeRoutingPlugin/js/routing', sfWebResponse::MIDDLE);
+      $response->addJavascript('/chCmsExposeRoutingPlugin/js/routing', sfWebResponse::LAST);
       $response->addJavascript($routing->generate('ch_cms_expose_routing'), sfWebResponse::LAST, array('no_archive' => true));
     }
   }
