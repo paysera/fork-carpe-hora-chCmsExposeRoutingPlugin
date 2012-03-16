@@ -42,6 +42,12 @@ Then enable *chCmsExposeRouting* in your application:
       - chCmsExposeRouting
 ```
 
+And finaly publish assets
+
+``` bash
+$ symfony plugin:publish-assets
+```
+
 you're done !
 
 ### More conf
