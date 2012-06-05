@@ -68,9 +68,9 @@ abstract class BasechCmsExposeRoutingActions extends sfActions
       foreach ($routing->getRoutes() as $route_id => $route)
       {
         // serialized routes
-        if (!is_object($route))
+        if (is_string($route))
         {
-          continue;
+          $route = unserialize($route);
         }
 
         $options = $route->getOptions();
