@@ -2,3 +2,5 @@ test/fixtures/project/cache/
 
 _layouts
 _posts
+
+/vendor/

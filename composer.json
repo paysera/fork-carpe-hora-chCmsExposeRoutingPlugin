@@ -1,0 +1,12 @@
+{
+    "name": "paysera/fork-carpe-hora-ch-cms-expose-routing-plugin",
+    "type": "library",
+    "description": "symfony 1 exposed routing",
+    "homepage": "https://github.com/Carpe-Hora/chCmsExposeRoutingPlugin",
+    "authors": [
+        {
+            "name": "Carpe-Hora"
+        }
+    ],
+    "require": {}
+}
